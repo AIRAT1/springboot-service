@@ -22,8 +22,8 @@ public class User {
     private String firstName;
     private String lastName;
 
-//    private String login;
-//    private String hashPassword;
+    private String login;
+    private String hashPassword;
 
 //    @Enumerated(value = EnumType.STRING)
 //    private Role role;
