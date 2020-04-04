@@ -1,43 +1,59 @@
 package de.service.security.details;
 
+import de.service.models.State;
+import de.service.models.User;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.Collections;
 
 public class UserDetailsImpl implements UserDetails {
+    private User user;
+
+    public UserDetailsImpl(User user) {
+        this.user = user;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        String userRole = user.getRole().name();
+        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(userRole);
+        return Collections.singletonList(authority);
     }
 
     @Override
     public String getPassword() {
-        return null;
+        return user.getHashPassword();
     }
 
     @Override
     public String getUsername() {
-        return null;
+        return user.getLogin();
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return !user.getState().equals(State.BANNED);
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return user.getState().equals(State.ACTIVE);
     }
 }
