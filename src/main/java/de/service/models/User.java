@@ -25,10 +25,10 @@ public class User {
     private String login;
     private String hashPassword;
 
-//    @Enumerated(value = EnumType.STRING)
-//    private Role role;
-//    @Enumerated(value = EnumType.STRING)
-//    private State state;
+    @Enumerated(value = EnumType.STRING)
+    private Role role;
+    @Enumerated(value = EnumType.STRING)
+    private State state;
 
     public static User from(UserForm form) {
         return User.builder()
