@@ -13,6 +13,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers("/users/**").authenticated()
+                .antMatchers("/signUp/**").permitAll()
                 .and()
                 .formLogin()
                 .loginPage("/login");
