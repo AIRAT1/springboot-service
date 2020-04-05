@@ -1,6 +1,7 @@
 package de.service.security.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -13,6 +14,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
+import javax.sql.DataSource;
+
 @Configuration
 @EnableWebSecurity
 @ComponentScan("de.service")
@@ -21,6 +24,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private UserDetailsService userDetailsService;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Qualifier("dataSource")
+    @Autowired
+    private DataSource dataSource;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -40,17 +46,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .rememberMe()
                 .rememberMeParameter("remember-me")
-//                .tokenRepository(tokenRepository())
+                .tokenRepository(tokenRepository())
         ;
         http.csrf().disable();
     }
 
-//    @Bean
-//    public PersistentTokenRepository tokenRepository() {
-//        JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
-//        tokenRepository.setDataSource(dataSource);
-//        return tokenRepository;
-//    }
+    @Bean
+    public PersistentTokenRepository tokenRepository() {
+        JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
+        tokenRepository.setDataSource(dataSource);
+        return tokenRepository;
+    }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
